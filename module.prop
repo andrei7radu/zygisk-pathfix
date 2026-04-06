@@ -1,0 +1,7 @@
+id=zygisk_pathfix
+name=Zygisk Path Fix
+version=1.0
+versionCode=1
+author=You
+description=Fix hardcoded Magisk path
+mismatch=huskydg -> x0eg0
