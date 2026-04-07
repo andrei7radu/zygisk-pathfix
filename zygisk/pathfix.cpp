@@ -1,12 +1,9 @@
-#include <zygisk.hpp>
 #include <dlfcn.h>
 #include <string.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
-using namespace zygisk;
 
 #define OLD_PKG "io.github.huskydg.magisk"
 #define NEW_PKG "io.github.x0eg0.magisk"
@@ -50,19 +47,11 @@ int my_open(const char *path, int flags, ...) {
     return orig_open(path, flags);
 }
 
-class PathFix : public ModuleBase {
-public:
-    void onLoad(Api *api, JNIEnv *env) override {
-        void *libc = dlopen("libc.so", RTLD_NOW);
+__attribute__((constructor))
+void init() {
+    void *libc = dlopen("libc.so", RTLD_NOW);
 
-        orig_stat = (int (*)(const char *, struct stat *)) dlsym(libc, "stat");
-        orig_access = (int (*)(const char *, int)) dlsym(libc, "access");
-        orig_open = (int (*)(const char *, int, ...)) dlsym(libc, "open");
-
-        api->hookFunc((void *)orig_stat, (void *)my_stat, (void **)&orig_stat);
-        api->hookFunc((void *)orig_access, (void *)my_access, (void **)&orig_access);
-        api->hookFunc((void *)orig_open, (void *)my_open, (void **)&orig_open);
-    }
-};
-
-REGISTER_ZYGISK_MODULE(PathFix)
+    orig_stat = (int (*)(const char *, struct stat *)) dlsym(libc, "stat");
+    orig_access = (int (*)(const char *, int)) dlsym(libc, "access");
+    orig_open = (int (*)(const char *, int, ...)) dlsym(libc, "open");
+}
