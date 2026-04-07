@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NDK=$ANDROID_NDK_HOME
+NDK=/usr/local/lib/android/sdk/ndk/25.2.9519653
 TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin
 
 TARGET=aarch64-linux-android
